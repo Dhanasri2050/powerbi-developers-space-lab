@@ -1,0 +1,67 @@
+table result
+	lineageTag: 1d6119b7-45cf-4b66-a6e8-06ef66427f9f
+
+	column date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5ad35e3b-6a4d-4e84-a75d-a1e3aa251d8a
+		summarizeBy: none
+		sourceColumn: date
+
+		variation Variation
+			isDefault
+			relationship: d0523a36-5972-41d8-95f0-9569f6f36f29
+			defaultHierarchy: LocalDateTable_3c28a206-a7be-4276-b45c-75787b3abd19.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AssetId
+		dataType: string
+		lineageTag: dcd51348-5e0e-41d5-8116-bd8d4ea6b33a
+		summarizeBy: none
+		sourceColumn: AssetId
+
+		annotation SummarizationSetBy = Automatic
+
+	column location
+		dataType: string
+		lineageTag: f6a91c23-c9b1-483c-bdea-312e538f221b
+		summarizeBy: none
+		sourceColumn: location
+
+		annotation SummarizationSetBy = Automatic
+
+	column Village
+		dataType: string
+		lineageTag: 854ec10e-b201-42d4-b399-8bc8e592eab4
+		summarizeBy: none
+		sourceColumn: Village
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: int64
+		formatString: 0
+		lineageTag: 85b9f7bc-8167-483f-bb78-5de176f1d7c2
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition result = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\DhanasriMahendramani\Downloads\New_Query_2024-10-25_3_18pm_2024_10_25.xlsx"), null, true),
+				    result1 = Source{[Name="result"]}[Data],
+				    #"Promoted Headers" = Table.PromoteHeaders(result1, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"date", type date}, {"AssetId", type text}, {"location", type text}, {"Village", type text}, {"value", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
